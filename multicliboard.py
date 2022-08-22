@@ -7,13 +7,13 @@ SAVED_DATA = 'clipboard.json'
 
 #Fuction to add items to a json file
 def save_data(filepath, data):
-    with open(filepath, 'w') as f:
+    with open(filepath, 'w+') as f:
         json.dump(data, f)
 
 #Fuction to read the keys and values of the json file
 def load_data(filepath):
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, 'r+') as f:
             data = json.load(f)
             return data
     except:
@@ -25,8 +25,8 @@ if len(sys.argv) == 2:
     data = load_data(SAVED_DATA)
 
     #Check if the values are the choosen.
-    if command == 'save':
-        key = input('Enter a key: ')
+    if command == 'add':
+        key = input('Enter a key: ').lower()
         data[key] = clipboard.paste()
         save_data(SAVED_DATA ,data)
         print('Data saved!')
@@ -53,6 +53,16 @@ if len(sys.argv) == 2:
 
     elif command == 'list':
         print(data)
+
+    elif command == 'del':
+        key = str(input('What key to delete? '))
+        if key in data:
+            data.pop(key)
+            with open(SAVED_DATA, 'w') as f:
+                json.dump(data, f)
+        
+        else:
+            print('Key not indentified!')
 
     else:
         print('Unknown value')
